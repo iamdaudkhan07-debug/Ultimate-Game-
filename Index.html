@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daud Games</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+}
+
+:root{
+  --bg:#eef3ff;
+  --card:rgba(255,255,255,.55);
+  --text:#111827;
+  --sub:#667085;
+  --accent:#7167ff;
+  --border:rgba(255,255,255,.8);
+}
+
+body.dark{
+  --bg:#080b12;
+  --card:rgba(30,35,48,.65);
+  --text:#fff;
+  --sub:#aab1c2;
+  --accent:#8b82ff;
+  --border:rgba(255,255,255,.12);
+}
+
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 10% 10%,#a8c7ff 0,transparent 28%),
+    radial-gradient(circle at 90% 20%,#e0a8ff 0,transparent 25%),
+    radial-gradient(circle at 50% 100%,#9ff5e1 0,transparent 30%),
+    var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  transition:.5s;
+}
+
+/* =========================
+   ENTRY SCREEN
+========================= */
+
+#entryScreen{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  background:
+    radial-gradient(circle at 20% 20%,#6d63ff55,transparent 30%),
+    radial-gradient(circle at 80% 70%,#ff55c855,transparent 30%),
+    #070911;
+  color:white;
+  overflow:hidden;
+}
+
+.entryGlass{
+  position:absolute;
+  width:280px;
+  height:280px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#ffffff25,#ffffff05);
+  backdrop-filter:blur(15px);
+  border:1px solid #ffffff20;
+  animation:entryFloat 5s infinite alternate ease-in-out;
+}
+
+.entryGlass.one{
+  left:-100px;
+  top:15%;
+}
+
+.entryGlass.two{
+  right:-100px;
+  bottom:10%;
+  animation-delay:1.5s;
+}
+
+@keyframes entryFloat{
+  from{transform:translate(0,0) scale(1)}
+  to{transform:translate(40px,-35px) scale(1.25)}
+}
+
+.entryContent{
+  position:relative;
+  z-index:2;
+}
+
+.welcome{
+  font-size:clamp(48px,14vw,100px);
+  font-weight:900;
+  letter-spacing:12px;
+  opacity:0;
+  transform:scale(.65);
+  animation:welcomeIn 1.5s cubic-bezier(.2,.8,.2,1) forwards;
+  background:linear-gradient(90deg,#fff,#aaa5ff,#fff);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.creator{
+  margin-top:15px;
+  font-size:16px;
+  letter-spacing:3px;
+  color:#ffffff99;
+  opacity:0;
+  animation:creatorIn 1s ease 1s forwards;
+}
+
+.entryLine{
+  width:0;
+  height:1px;
+  margin:22px auto;
+  background:#ffffff80;
+  animation:lineIn 1s ease 1.4s forwards;
+}
+
+@keyframes welcomeIn{
+  0%{
+    opacity:0;
+    transform:scale(.65);
+    filter:blur(15px);
+  }
+  60%{
+    opacity:1;
+    transform:scale(1.08);
+    filter:blur(0);
+  }
+  100%{
+    opacity:1;
+    transform:scale(1);
+  }
+}
+
+@keyframes creatorIn{
+  from{
+    opacity:0;
+    transform:translateY(15px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes lineIn{
+  from{width:0}
+  to{width:180px}
+}
+
+.entryHide{
+  animation:entryOut .9s ease forwards;
+}
+
+@keyframes entryOut{
+  to{
+    opacity:0;
+    transform:scale(1.08);
+    filter:blur(15px);
+  }
+}
+
+/* =========================
+   BACKGROUND BLOBS
+========================= */
+
+.blob{
+  position:fixed;
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  filter:blur(35px);
+  opacity:.45;
+  z-index:-1;
+  animation:float 8s infinite alternate ease-in-out;
+}
+
+.b1{background:#7c6cff;top:15%;left:-50px}
+.b2{background:#ff6fcf;right:-60px;top:40%;animation-delay:2s}
+.b3{background:#5effcf;bottom:-70px;left:35%;animation-delay:4s}
+
+@keyframes float{
+  from{transform:translate(0,0) scale(1)}
+  to{transform:translate(50px,-35px) scale(1.25)}
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px;
+}
+
+.logo{
+  font-size:21px;
+  font-weight:800;
+}
+
+.menu{
+  position:relative;
+}
+
+.menuBtn{
+  width:43px;
+  height:43px;
+  border:1px solid var(--border);
+  border-radius:15px;
+  background:var(--card);
+  backdrop-filter:blur(20px);
+  color:var(--text);
+  font-size:22px;
+  cursor:pointer;
+}
+
+.dropdown{
+  display:none;
+  position:absolute;
+  right:0;
+  top:52px;
+  width:170px;
+  padding:10px;
+  border-radius:20px;
+  background:var(--card);
+  backdrop-filter:blur(25px);
+  border:1px solid var(--border);
+  box-shadow:0 15px 40px #0002;
+  z-index:20;
+}
+
+.dropdown.show{
+  display:block;
+}
+
+.dropdown button{
+  width:100%;
+  border:0;
+  padding:12px;
+  margin:3px 0;
+  border-radius:12px;
+  background:transparent;
+  color:var(--text);
+  text-align:left;
+  cursor:pointer;
+}
+
+.dropdown button:hover{
+  background:#ffffff30;
+}
+
+/* =========================
+   MAIN INTRO
+========================= */
+
+.intro{
+  min-height:78vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:25px;
+}
+
+.introBox{
+  max-width:650px;
+  animation:appear 1s ease;
+}
+
+@keyframes appear{
+  from{
+    opacity:0;
+    transform:translateY(35px) scale(.95);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+.intro h1{
+  font-size:clamp(45px,12vw,90px);
+  font-weight:900;
+  letter-spacing:-5px;
+  background:linear-gradient(90deg,#675cff,#d84fff,#00c9a7);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.intro h2{
+  margin:8px 0;
+  font-size:28px;
+}
+
+.intro p{
+  color:var(--sub);
+  line-height:1.6;
+  margin:15px auto;
+}
+
+.credit{
+  font-size:14px;
+  margin:20px 0;
+  color:var(--sub);
+}
+
+.start{
+  border:0;
+  padding:16px 32px;
+  border-radius:20px;
+  background:linear-gradient(135deg,#7066ff,#a84cff);
+  color:white;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+  box-shadow:0 12px 35px #7166ff55;
+  transition:.25s;
+}
+
+.start:hover{
+  transform:translateY(-4px) scale(1.03);
+}
+
+/* =========================
+   GAMES
+========================= */
+
+#gamesPage{
+  display:none;
+  padding:15px;
+  animation:appear .6s ease;
+}
+
+.title{
+  text-align:center;
+  margin:25px 0;
+}
+
+.title h1{
+  font-size:35px;
+}
+
+.title p{
+  color:var(--sub);
+  margin-top:7px;
+}
+
+.games{
+  max-width:900px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:18px;
+}
+
+.gameCard{
+  padding:24px;
+  min-height:210px;
+  border-radius:28px;
+  background:var(--card);
+  backdrop-filter:blur(25px);
+  border:1px solid var(--border);
+  box-shadow:0 15px 40px #00000012;
+  transition:.3s;
+  cursor:pointer;
+}
+
+.gameCard:hover{
+  transform:translateY(-8px) scale(1.01);
+}
+
+.icon{
+  font-size:45px;
+  margin-bottom:15px;
+}
+
+.gameCard h2{
+  margin-bottom:8px;
+}
+
+.gameCard p{
+  color:var(--sub);
+  line-height:1.5;
+  margin-bottom:18px;
+}
+
+.play{
+  border:0;
+  border-radius:13px;
+  padding:10px 18px;
+  background:var(--accent);
+  color:white;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+/* =========================
+   GAME AREA
+========================= */
+
+#gameArea{
+  display:none;
+  max-width:700px;
+  margin:20px auto;
+  padding:20px;
+  text-align:center;
+}
+
+.gamePanel{
+  min-height:400px;
+  padding:25px;
+  border-radius:30px;
+  background:var(--card);
+  backdrop-filter:blur(25px);
+  border:1px solid var(--border);
+  box-shadow:0 20px 50px #0002;
+}
+
+.back{
+  float:left;
+  border:0;
+  background:#ffffff25;
+  color:var(--text);
+  padding:9px 14px;
+  border-radius:12px;
+  cursor:pointer;
+}
+
+#gameTitle{
+  margin:35px 0 15px;
+}
+
+.score{
+  font-size:20px;
+  font-weight:bold;
+  margin:12px;
+}
+
+/* TARGET */
+
+.targetArea{
+  height:280px;
+  position:relative;
+  border-radius:22px;
+  background:#00000012;
+  overflow:hidden;
+}
+
+.target{
+  width:55px;
+  height:55px;
+  border-radius:50%;
+  background:#ff3b6b;
+  position:absolute;
+  cursor:pointer;
+  box-shadow:0 0 25px #ff3b6b99;
+  transition:.12s;
+}
+
+/* REACTION */
+
+.reactionBox{
+  height:250px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:22px;
+  background:#77777720;
+  font-size:25px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* MEMORY */
+
+.memory{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  max-width:400px;
+  margin:20px auto;
+}
+
+.card{
+  aspect-ratio:1;
+  border-radius:15px;
+  background:var(--accent);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:transparent;
+  font-size:30px;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.card.open{
+  background:#ffffff55;
+  color:var(--text);
+  transform:rotateY(180deg);
+}
+
+/* 2048 */
+
+.board{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:7px;
+  max-width:350px;
+  margin:20px auto;
+  padding:7px;
+  border-radius:18px;
+  background:#77777730;
+}
+
+.tile{
+  aspect-ratio:1;
+  border-radius:12px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:23px;
+  font-weight:bold;
+  background:#ffffff35;
+}
+
+.controls button{
+  margin:4px;
+  padding:12px 18px;
+  border:0;
+  border-radius:12px;
+  background:var(--accent);
+  color:white;
+  cursor:pointer;
+}
+
+footer{
+  text-align:center;
+  color:var(--sub);
+  padding:30px;
+  font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ENTRY SCREEN -->
+
+<div id="entryScreen">
+
+  <div class="entryGlass one"></div>
+  <div class="entryGlass two"></div>
+
+  <div class="entryContent">
+
+    <div class="welcome">WELCOME</div>
+
+    <div class="entryLine"></div>
+
+    <div class="creator">
+      made by Daud Raza Khan
+    </div>
+
+  </div>
+
+</div>
+
+
+<div class="blob b1"></div>
+<div class="blob b2"></div>
+<div class="blob b3"></div>
+
+
+<!-- HEADER -->
+
+<header>
+
+  <div class="logo">🎮 Daud Games</div>
+
+  <div class="menu">
+
+    <button class="menuBtn" onclick="toggleMenu()">⋮</button>
+
+    <div class="dropdown" id="dropdown">
+
+      <button onclick="setTheme('light')">
+        ☀️ White Mode
+      </button>
+
+      <button onclick="setTheme('dark')">
+        🌙 Dark Mode
+      </button>
+
+      <button onclick="showHome()">
+        🏠 Home
+      </button>
+
+    </div>
+
+  </div>
+
+</header>
+
+
+<!-- HOME -->
+
+<section class="intro" id="home">
+
+  <div class="introBox">
+
+    <h1>PLAY</h1>
+
+    <h2>THE GAME</h2>
+
+    <p>
+      Welcome to a smooth liquid-glass gaming world.
+      Choose your game, challenge yourself and have fun.
+    </p>
+
+    <div class="credit">
+      This game is made by <b>@iamdaudkhan</b>
+    </div>
+
+    <button class="start" onclick="showGames()">
+      ▶ Start Playing
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- GAMES -->
+
+<section id="gamesPage">
+
+  <div class="title">
+
+    <h1>Choose Your Game 🎮</h1>
+
+    <p>
+      Pick a game and start playing.
+    </p>
+
+  </div>
+
+
+  <div class="games">
+
+    <div class="gameCard" onclick="openGame('target')">
+
+      <div class="icon">🎯</div>
+
+      <h2>Target Rush</h2>
+
+      <p>
+        Hit the moving target before time runs out.
+      </p>
+
+      <button class="play">
+        PLAY
+      </button>
+
+    </div>
+
+
+    <div class="gameCard" onclick="openGame('memory')">
+
+      <div class="icon">🧠</div>
+
+      <h2>Memory Flip</h2>
+
+      <p>
+        Find matching pairs and test your memory.
+      </p>
+
+      <button class="play">
+        PLAY
+      </button>
+
+    </div>
+
+
+    <div class="gameCard" onclick="openGame('reaction')">
+
+      <div class="icon">⚡</div>
+
+      <h2>Reaction Tap</h2>
+
+      <p>
+        Wait for the signal and tap as quickly as possible.
+      </p>
+
+      <button class="play">
+        PLAY
+      </button>
+
+    </div>
+
+
+    <div class="gameCard" onclick="openGame('2048')">
+
+      <div class="icon">🧩</div>
+
+      <h2>2048 Mini</h2>
+
+      <p>
+        Combine numbers and try to reach 2048.
+      </p>
+
+      <button class="play">
+        PLAY
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <footer>
+    © 2026 Daud Games • Made by @iamdaudkhan
+  </footer>
+
+</section>
+
+
+<!-- GAME AREA -->
+
+<section id="gameArea">
+
+  <div class="gamePanel">
+
+    <button class="back" onclick="backGames()">
+      ← Back
+    </button>
+
+    <h1 id="gameTitle"></h1>
+
+    <div id="gameContent"></div>
+
+  </div>
+
+</section>
+
+
+<script>
+
+/* =========================
+   ENTRY ANIMATION
+========================= */
+
+window.addEventListener("load",()=>{
+
+  setTimeout(()=>{
+
+    const entry=document.getElementById("entryScreen");
+
+    entry.classList.add("entryHide");
+
+    setTimeout(()=>{
+
+      entry.style.display="none";
+
+    },900);
+
+  },3200);
+
+});
+
+
+/* =========================
+   MENU
+========================= */
+
+function toggleMenu(){
+
+  document
+  .getElementById("dropdown")
+  .classList.toggle("show");
+
+}
+
+
+/* =========================
+   THEME
+========================= */
+
+function setTheme(mode){
+
+  if(mode==="dark"){
+
+    document.body.classList.add("dark");
+
+    localStorage.setItem("theme","dark");
+
+  }else{
+
+    document.body.classList.remove("dark");
+
+    localStorage.setItem("theme","light");
+
+  }
+
+  toggleMenu();
+
+}
+
+
+if(localStorage.getItem("theme")==="dark"){
+
+  document.body.classList.add("dark");
+
+}
+
+
+/* =========================
+   HOME
+========================= */
+
+function showHome(){
+
+  document.getElementById("home").style.display="flex";
+
+  document.getElementById("gamesPage").style.display="none";
+
+  document.getElementById("gameArea").style.display="none";
+
+  document.getElementById("dropdown").classList.remove("show");
+
+}
+
+
+/* =========================
+   GAME LIST
+========================= */
+
+function showGames(){
+
+  document.getElementById("home").style.display="none";
+
+  document.getElementById("gamesPage").style.display="block";
+
+  document.getElementById("gameArea").style.display="none";
+
+}
+
+
+/* =========================
+   OPEN GAME
+========================= */
+
+let currentGame="";
+
+function openGame(game){
+
+  currentGame=game;
+
+  document.getElementById("home").style.display="none";
+
+  document.getElementById("gamesPage").style.display="none";
+
+  document.getElementById("gameArea").style.display="block";
+
+  if(game==="target") targetGame();
+
+  if(game==="memory") memoryGame();
+
+  if(game==="reaction") reactionGame();
+
+  if(game==="2048") game2048();
+
+}
+
+
+function backGames(){
+
+  document.getElementById("gameArea").style.display="none";
+
+  document.getElementById("gamesPage").style.display="block";
+
+}
+
+
+/* =========================
+   TARGET RUSH
+========================= */
+
+function targetGame(){
+
+  document.getElementById("gameTitle").innerText="🎯 Target Rush";
+
+  document.getElementById("gameContent").innerHTML=`
+
+    <div class="score">
+      Score: <span id="score">0</span>
+    </div>
+
+    <div class="score">
+      Time: <span id="time">20</span>s
+    </div>
+
+    <div class="targetArea" id="targetArea">
+
+      <div class="target" id="target"></div>
+
+    </div>
+
+    <br>
+
+    <button class="play" onclick="targetGame()">
+      Restart
+    </button>
+
+  `;
+
+
+  let score=0;
+
+  let time=20;
+
+  const target=document.getElementById("target");
+
+  const area=document.getElementById("targetArea");
+
+
+  function move(){
+
+    target.style.left=
+      Math.random()*(area.clientWidth-60)+"px";
+
+    target.style.top=
+      Math.random()*(area.clientHeight-60)+"px";
+
+  }
+
+
+  target.onclick=()=>{
+
+    score++;
+
+    document.getElementById("score").innerText=score;
+
+    move();
+
+  };
+
+
+  move();
+
+
+  let timer=setInterval(()=>{
+
+    time--;
+
+    if(document.getElementById("time"))
+      document.getElementById("time").innerText=time;
+
+    if(time<=0){
+
+      clearInterval(timer);
+
+      target.style.display="none";
+
+      alert("Game Over! Your score: "+score);
+
+    }
+
+  },1000);
+
+}
+
+
+/* =========================
+   MEMORY FLIP
+========================= */
+
+function memoryGame(){
+
+  document.getElementById("gameTitle").innerText="🧠 Memory Flip";
+
+  let icons=[
+    "🍎","🍎",
+    "🚀","🚀",
+    "⭐","⭐",
+    "🎧","🎧"
+  ];
+
+  icons.sort(()=>Math.random()-.5);
+
+
+  document.getElementById("gameContent").innerHTML=`
+
+    <p>
+      Find all matching pairs.
+    </p>
+
+    <div class="memory" id="memory"></div>
+
+  `;
+
+
+  let memory=document.getElementById("memory");
+
+  let first=null;
+
+  let lock=false;
+
+  let matched=0;
+
+
+  icons.forEach(icon=>{
+
+    let card=document.createElement("div");
+
+    card.className="card";
+
+    card.dataset.icon=icon;
+
+    card.innerText=icon;
+
+
+    card.onclick=()=>{
+
+      if(
+        lock ||
+        card.classList.contains("open")
+      ) return;
+
+
+      card.classList.add("open");
+
+
+      if(!first){
+
+        first=card;
+
+        return;
+
+      }
+
+
+      if(first.dataset.icon===card.dataset.icon){
+
+        matched+=2;
+
+        first=null;
+
+
+        if(matched===icons.length){
+
+          setTimeout(()=>{
+
+            alert("🎉 You won!");
+
+          },300);
+
+        }
+
+      }else{
+
+        lock=true;
+
+        setTimeout(()=>{
+
+          first.classList.remove("open");
+
+          card.classList.remove("open");
+
+          first=null;
+
+          lock=false;
+
+        },700);
+
+      }
+
+    };
+
+
+    memory.appendChild(card);
+
+  });
+
+}
+
+
+/* =========================
+   REACTION TAP
+========================= */
+
+function reactionGame(){
+
+  document.getElementById("gameTitle").innerText="⚡ Reaction Tap";
+
+
+  document.getElementById("gameContent").innerHTML=`
+
+    <p id="reactionText">
+      Tap START and wait...
+    </p>
+
+    <div class="reactionBox" id="reactionBox">
+      START
+    </div>
+
+    <h2 id="reactionResult"></h2>
+
+  `;
+
+
+  let box=document.getElementById("reactionBox");
+
+  let text=document.getElementById("reactionText");
+
+  let result=document.getElementById("reactionResult");
+
+
+  box.onclick=()=>{
+
+    if(box.dataset.wait==="yes"){
+
+      result.innerText="Too early! ❌";
+
+      box.dataset.wait="";
+
+      box.innerText="START";
+
+      return;
+
+    }
+
+
+    box.dataset.wait="yes";
+
+    box.innerText="WAIT...";
+
+
+    let delay=
+      1000+
+      Math.random()*3000;
+
+
+    setTimeout(()=>{
+
+      box.dataset.wait="ready";
+
+      box.innerText="TAP NOW!";
+
+      text.innerText="GO!";
+
+
+      let start=performance.now();
+
+
+      box.onclick=()=>{
+
+        let reaction=
+          Math.round(
+            performance.now()-start
+          );
+
+
+        result.innerText=
+          "⚡ "+reaction+" ms";
+
+
+        box.dataset.wait="";
+
+        box.innerText="START";
+
+        box.onclick=reactionGame;
+
+      };
+
+
+    },delay);
+
+  };
+
+}
+
+
+/* =========================
+   2048
+========================= */
+
+function game2048(){
+
+  document.getElementById("gameTitle").innerText="🧩 2048 Mini";
+
+
+  document.getElementById("gameContent").innerHTML=`
+
+    <div class="board" id="board"></div>
+
+    <div class="controls">
+
+      <button onclick="move2048('up')">↑</button>
+
+      <br>
+
+      <button onclick="move2048('left')">←</button>
+
+      <button onclick="move2048('down')">↓</button>
+
+      <button onclick="move2048('right')">→</button>
+
+    </div>
+
+    <br>
+
+    <button class="play" onclick="game2048()">
+      Restart
+    </button>
+
+  `;
+
+
+  window.boardData=[
+
+    [0,0,0,0],
+
+    [0,0,0,0],
+
+    [0,0,0,0],
+
+    [0,0,0,0]
+
+  ];
+
+
+  addTile();
+
+  addTile();
+
+  drawBoard();
+
+}
+
+
+function addTile(){
+
+  let empty=[];
+
+
+  for(let r=0;r<4;r++)
+
+    for(let c=0;c<4;c++)
+
+      if(boardData[r][c]===0)
+
+        empty.push([r,c]);
+
+
+  if(!empty.length)return;
+
+
+  let pos=
+    empty[
+      Math.floor(
+        Math.random()*empty.length
+      )
+    ];
+
+
+  boardData[pos[0]][pos[1]]=
+    Math.random()<.9?2:4;
+
+}
+
+
+function drawBoard(){
+
+  let board=
+    document.getElementById("board");
+
+
+  if(!board)return;
+
+
+  board.innerHTML="";
+
+
+  for(let r=0;r<4;r++){
+
+    for(let c=0;c<4;c++){
+
+      let tile=
+        document.createElement("div");
+
+
+      tile.className="tile";
+
+      tile.innerText=
+        boardData[r][c]||"";
+
+
+      board.appendChild(tile);
+
+    }
+
+  }
+
+}
+
+
+function move2048(direction){
+
+  let old=
+    JSON.stringify(boardData);
+
+
+  function compress(row){
+
+    row=row.filter(x=>x);
+
+
+    for(
+      let i=0;
+      i<row.length-1;
+      i++
+    ){
+
+      if(row[i]===row[i+1]){
+
+        row[i]*=2;
+
+        row[i+1]=0;
+
+      }
+
+    }
+
+
+    row=row.filter(x=>x);
+
+
+    while(row.length<4)
+
+      row.push(0);
+
+
+    return row;
+
+  }
+
+
+  if(direction==="left"){
+
+    for(let r=0;r<4;r++)
+
+      boardData[r]=
+        compress(boardData[r]);
+
+  }
+
+
+  if(direction==="right"){
+
+    for(let r=0;r<4;r++)
+
+      boardData[r]=
+        compress(
+          boardData[r].reverse()
+        ).reverse();
+
+  }
+
+
+  if(direction==="up"){
+
+    for(let c=0;c<4;c++){
+
+      let col=[];
+
+
+      for(let r=0;r<4;r++)
+
+        col.push(boardData[r][c]);
+
+
+      col=compress(col);
+
+
+      for(let r=0;r<4;r++)
+
+        boardData[r][c]=col[r];
+
+    }
+
+  }
+
+
+  if(direction==="down"){
+
+    for(let c=0;c<4;c++){
+
+      let col=[];
+
+
+      for(let r=0;r<4;r++)
+
+        col.push(boardData[r][c]);
+
+
+      col=
+        compress(
+          col.reverse()
+        ).reverse();
+
+
+      for(let r=0;r<4;r++)
+
+        boardData[r][c]=col[r];
+
+    }
+
+  }
+
+
+  if(
+    JSON.stringify(boardData)!==old
+  )
+
+    addTile();
+
+
+  drawBoard();
+
+}
+
+
+/* =========================
+   KEYBOARD SUPPORT
+========================= */
+
+document.addEventListener(
+  "keydown",
+  e=>{
+
+    if(currentGame==="2048"){
+
+      if(e.key==="ArrowUp")
+        move2048("up");
+
+      if(e.key==="ArrowDown")
+        move2048("down");
+
+      if(e.key==="ArrowLeft")
+        move2048("left");
+
+      if(e.key==="ArrowRight")
+        move2048("right");
+
+    }
+
+  }
+);
+
+</script>
+
+</body>
+</html>
